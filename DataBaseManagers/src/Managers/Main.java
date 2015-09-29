@@ -5,10 +5,10 @@ import javax.swing.UIManager;
 
 public class Main {
     
-    private CLogIn start;
+    private CLogIn logIn;
     
     public Main() {
-        start = new CLogIn();
+        logIn = new CLogIn();
     }
     
     public static void main(String [] args)
@@ -23,10 +23,5 @@ public class Main {
         }
         
         new Main();
-        
-        /*
-        MySQLConnection mysql = new MySQLConnection("mysql", "root", "123456");
-        mysql.conectDataBase();
-        */
     }
 }

@@ -51,17 +51,20 @@ public class MySQLConnection {
         this.password = password;
     }
 
-    public void conectDataBase()
+    public boolean conect()
     {
         try
         {
             Class.forName("com.mysql.jdbc.Driver");
             conecction = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/" + database, user, password);
+            return true;
         }
         catch (ClassNotFoundException | SQLException ex)
         {
-            JOptionPane.showMessageDialog(null, "Access denied for User: " + user + ", Password: " + password + ". Configure DB connection.", "Connection Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Acceso Negado para el Usuario: " + user + ", Contraseña: " + password + ".", "Error de Conexión", JOptionPane.ERROR_MESSAGE);
         }
+        
+        return false;
     }
     
     public ResultSet receive(String consulta) throws SQLException
