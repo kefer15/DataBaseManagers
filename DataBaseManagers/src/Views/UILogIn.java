@@ -12,7 +12,7 @@ public class UILogIn extends javax.swing.JFrame {
     {
         initComponents();
         this.setVisible(true);
-        this.setTitle("Gestor de Base de Datos");
+        this.setTitle("Gestor de Bases de Datos");
         setLocationRelativeTo(null);
         
         this.logIn = logIn;
@@ -71,13 +71,16 @@ public class UILogIn extends javax.swing.JFrame {
             }
         });
 
-        btnShowPass.setIcon(new javax.swing.ImageIcon("C:\\Users\\Miguel\\Desktop\\Repositorios\\DataBaseManagers\\DataBaseManagers\\ojito.jpg")); // NOI18N
+        btnShowPass.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Sources/Eye.jpg"))); // NOI18N
         btnShowPass.setBorder(null);
         btnShowPass.setBorderPainted(false);
         btnShowPass.setContentAreaFilled(false);
-        btnShowPass.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnShowPassActionPerformed(evt);
+        btnShowPass.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnShowPassMouseExited(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnShowPassMousePressed(evt);
             }
         });
 
@@ -256,15 +259,13 @@ public class UILogIn extends javax.swing.JFrame {
         cbxUsers.removeAllItems();
     }//GEN-LAST:event_rbtPostgreSQLActionPerformed
 
-    private void btnShowPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowPassActionPerformed
-        String password = "";
-        char[] var = this.pwfPassword.getPassword();
+    private void btnShowPassMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnShowPassMousePressed
+        this.lblPassword.setText(String.valueOf(this.pwfPassword.getPassword()));
+    }//GEN-LAST:event_btnShowPassMousePressed
 
-        for(int i = 0;i < this.pwfPassword.getPassword().length;i++)
-                password += var[i];
-        
-        this.lblPassword.setText(password);
-    }//GEN-LAST:event_btnShowPassActionPerformed
+    private void btnShowPassMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnShowPassMouseExited
+        this.lblPassword.setText("");
+    }//GEN-LAST:event_btnShowPassMouseExited
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgpDataBases;

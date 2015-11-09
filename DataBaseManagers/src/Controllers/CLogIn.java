@@ -1,6 +1,5 @@
 package Controllers;
 
-import Managers.Main;
 import Managers.MySQLConnection;
 import Views.UILogIn;
 import java.sql.ResultSet;

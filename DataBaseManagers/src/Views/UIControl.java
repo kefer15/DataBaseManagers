@@ -1,29 +1,34 @@
 package Views;
 
 import Controllers.IControl;
+import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 public class UIControl extends javax.swing.JFrame {
 
-    private IControl control;
-    private String currentUser;
-    private String currentPass;
+    private final IControl control;
+    private final String currentUser;
+    private final String currentPass;
+    
     private ArrayList <String> dataBasesNames;
     
-    public UIControl(IControl control, String currentUser, String currentPass)
+    public UIControl(IControl control, String currentUser, String currentPass, ArrayList <String> dataBasesNames)
     {
         initComponents();
         this.setVisible(true);
-        this.setTitle("Crear Nuevo Usuario");
+        this.setTitle("Gestor de Bases de Datos");
         setLocationRelativeTo(null);
         
-        this.control = control;
+        this.control = control; 
         this.currentUser = currentUser;
         this.currentPass = currentPass;
+        this.dataBasesNames = dataBasesNames;
         
-        dataBasesNames = this.control.initialState(this.currentUser, this.currentPass, this.cbxDataBases);
-        this.control.showTables(this.currentUser, this.currentPass, dataBasesNames.get(cbxDataBases.getSelectedIndex()), this.lstTables);
+        this.cbxDataBases.removeAllItems();
+        dataBasesNames.stream().forEach((dataBasesName) -> {
+            cbxDataBases.addItem(dataBasesName);
+        });
     }
     
     @SuppressWarnings("unchecked")
@@ -49,51 +54,19 @@ public class UIControl extends javax.swing.JFrame {
         lstTables = new javax.swing.JList();
         btnExit = new javax.swing.JButton();
         btnAddUser = new javax.swing.JButton();
+        lblTitle = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
+        pnlDataBases.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+
         lblDataBases.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lblDataBases.setText("Bases de Datos Existentes");
 
-        cbxDataBases.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                cbxDataBasesMouseClicked(evt);
-            }
-        });
-        cbxDataBases.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentShown(java.awt.event.ComponentEvent evt) {
-                cbxDataBasesComponentShown(evt);
-            }
-        });
-        cbxDataBases.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseMoved(java.awt.event.MouseEvent evt) {
-                cbxDataBasesMouseMoved(evt);
-            }
-        });
         cbxDataBases.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbxDataBasesItemStateChanged(evt);
-            }
-        });
-        cbxDataBases.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxDataBasesActionPerformed(evt);
-            }
-        });
-        cbxDataBases.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                cbxDataBasesFocusLost(evt);
-            }
-        });
-        cbxDataBases.addHierarchyListener(new java.awt.event.HierarchyListener() {
-            public void hierarchyChanged(java.awt.event.HierarchyEvent evt) {
-                cbxDataBasesHierarchyChanged(evt);
-            }
-        });
-        cbxDataBases.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                cbxDataBasesKeyPressed(evt);
             }
         });
 
@@ -114,8 +87,18 @@ public class UIControl extends javax.swing.JFrame {
         });
 
         btnCreateTable.setText("Crear tabla");
+        btnCreateTable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreateTableActionPerformed(evt);
+            }
+        });
 
         btnRemoveTable.setText("Eliminar Tabla");
+        btnRemoveTable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveTableActionPerformed(evt);
+            }
+        });
 
         btnInsertField.setText("Insertar Campo");
 
@@ -201,6 +184,8 @@ public class UIControl extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        pnlTables.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+
         lblDataBaseName.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lblDataBaseName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblDataBaseName.setText("Tablas Existentes");
@@ -213,10 +198,10 @@ public class UIControl extends javax.swing.JFrame {
             pnlTablesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlTablesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlTablesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblDataBaseName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(scpTables))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(pnlTablesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(scpTables, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+                    .addComponent(lblDataBaseName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         pnlTablesLayout.setVerticalGroup(
             pnlTablesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -242,6 +227,10 @@ public class UIControl extends javax.swing.JFrame {
             }
         });
 
+        lblTitle.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitle.setText("GESTOR DE BASES DE DATOS");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -249,6 +238,7 @@ public class UIControl extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(btnAddUser, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -264,6 +254,8 @@ public class UIControl extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(pnlDataBases, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnlTables, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -282,7 +274,7 @@ public class UIControl extends javax.swing.JFrame {
         String message = this.control.createDataBase(currentUser, currentPass, dataBaseName);
         
         if(message.isEmpty()){
-            dataBasesNames = this.control.initialState(this.currentUser, this.currentPass, this.cbxDataBases);
+            this.dataBasesNames = this.control.initialState(this.currentUser, this.currentPass, this.cbxDataBases);
             JOptionPane.showMessageDialog(  null, 
                                             "Los Datos han sido ingresados correctamente.", 
                                             "Datos Correctos", 
@@ -295,10 +287,6 @@ public class UIControl extends javax.swing.JFrame {
                                             JOptionPane.ERROR_MESSAGE);
     }//GEN-LAST:event_btnCreateDataBaseActionPerformed
 
-    private void cbxDataBasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxDataBasesActionPerformed
-        
-    }//GEN-LAST:event_cbxDataBasesActionPerformed
-
     private void btnRemoveDataBaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveDataBaseActionPerformed
         int option = JOptionPane.showConfirmDialog(  null, 
                                             "¿Desea eliminar las base de Datos '" + dataBasesNames.get(this.cbxDataBases.getSelectedIndex()) + "' ?", 
@@ -307,10 +295,10 @@ public class UIControl extends javax.swing.JFrame {
         if(option == JOptionPane.OK_OPTION){
             this.control.removeDataBase(currentUser, currentPass, dataBasesNames.get(this.cbxDataBases.getSelectedIndex()));
         
-        this.cbxDataBases.removeItemAt(this.cbxDataBases.getSelectedIndex());
-        this.cbxDataBases.setSelectedIndex(0);
-        
-        dataBasesNames = this.control.initialState(this.currentUser, this.currentPass, this.cbxDataBases);
+            this.cbxDataBases.removeItemAt(this.cbxDataBases.getSelectedIndex());
+            this.cbxDataBases.setSelectedIndex(0);
+
+            this.dataBasesNames = this.control.initialState(this.currentUser, this.currentPass, this.cbxDataBases);
         }
     }//GEN-LAST:event_btnRemoveDataBaseActionPerformed
 
@@ -323,37 +311,40 @@ public class UIControl extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddUserActionPerformed
 
     private void cbxDataBasesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxDataBasesItemStateChanged
-        //this.control.showTables(this.currentUser, this.currentPass, dataBasesNames.get(cbxDataBases.getSelectedIndex()), this.lstTables);
+        if(evt.getStateChange() == ItemEvent.SELECTED) {
+            this.control.showTables(this.currentUser, this.currentPass, dataBasesNames.get(cbxDataBases.getSelectedIndex()), this.lstTables);
+        }
     }//GEN-LAST:event_cbxDataBasesItemStateChanged
 
-    private void cbxDataBasesMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbxDataBasesMouseMoved
-    }//GEN-LAST:event_cbxDataBasesMouseMoved
+    private void btnCreateTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateTableActionPerformed
+        this.control.createTable(this.currentUser, this.currentPass, String.valueOf(this.cbxDataBases.getSelectedItem()));
+    }//GEN-LAST:event_btnCreateTableActionPerformed
 
-    private void cbxDataBasesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbxDataBasesFocusLost
-        
-        
-// TODO add your handling code here:
-    }//GEN-LAST:event_cbxDataBasesFocusLost
-
-    private void cbxDataBasesComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_cbxDataBasesComponentShown
-  
-// TODO add your handling code here:
-    }//GEN-LAST:event_cbxDataBasesComponentShown
-
-    private void cbxDataBasesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbxDataBasesMouseClicked
-            
-// TODO add your handling code here:
-    }//GEN-LAST:event_cbxDataBasesMouseClicked
-
-    private void cbxDataBasesHierarchyChanged(java.awt.event.HierarchyEvent evt) {//GEN-FIRST:event_cbxDataBasesHierarchyChanged
-       
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbxDataBasesHierarchyChanged
-
-    private void cbxDataBasesKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbxDataBasesKeyPressed
-        
-// TODO add your handling code here:
-    }//GEN-LAST:event_cbxDataBasesKeyPressed
+    private void btnRemoveTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveTableActionPerformed
+        if(this.lstTables.getSelectedIndex() == -1) {
+            JOptionPane.showMessageDialog(  null, 
+                                            "Seleccione un registro de la lista", 
+                                            "Datos Incorrectos", 
+                                            JOptionPane.ERROR_MESSAGE);
+        } else {
+            String problem = this.control.dropTable(this.currentUser, this.currentPass, String.valueOf(this.cbxDataBases.getSelectedItem()), String.valueOf(this.lstTables.getSelectedValue()));
+            if(problem.isEmpty()) {
+                JOptionPane.showMessageDialog(  null, 
+                                            "La tabla ha sido eliminada correctamente", 
+                                            "Eliminacion correcta", 
+                                            JOptionPane.ERROR_MESSAGE);
+                this.cbxDataBases.removeAllItems();
+                    dataBasesNames.stream().forEach((dataBasesName) -> {
+                    cbxDataBases.addItem(dataBasesName);
+                });
+            }
+            else
+                JOptionPane.showMessageDialog(  null, 
+                                            "No posee permisos para eliminar esta tabla", 
+                                            "Excepción", 
+                                            JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnRemoveTableActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddUser;
@@ -370,6 +361,7 @@ public class UIControl extends javax.swing.JFrame {
     private javax.swing.JLabel lblDataBaseName;
     private javax.swing.JLabel lblDataBases;
     private javax.swing.JLabel lblDataBases1;
+    private javax.swing.JLabel lblTitle;
     private javax.swing.JList lstTables;
     private javax.swing.JPanel pnlDataBases;
     private javax.swing.JPanel pnlDataBasesOptions;

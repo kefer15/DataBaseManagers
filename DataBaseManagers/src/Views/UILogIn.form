@@ -197,7 +197,7 @@
             <Component class="javax.swing.JButton" name="btnShowPass">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="2" name="C:\Users\Miguel\Desktop\Repositorios\DataBaseManagers\DataBaseManagers\ojito.jpg"/>
+                  <Image iconType="3" name="/Sources/Eye.jpg"/>
                 </Property>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="null"/>
@@ -206,7 +206,8 @@
                 <Property name="contentAreaFilled" type="boolean" value="false"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnShowPassActionPerformed"/>
+                <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnShowPassMouseExited"/>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnShowPassMousePressed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JPasswordField" name="pwfPassword">

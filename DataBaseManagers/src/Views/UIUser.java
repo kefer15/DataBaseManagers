@@ -13,7 +13,7 @@ public class UIUser extends javax.swing.JFrame {
     {
         initComponents();
         this.setVisible(true);
-        this.setTitle("Crear Nuevo Usuario");
+        this.setTitle("Gestor de Bases de Datos");
         setLocationRelativeTo(null);
         
         this.user = user;
@@ -50,9 +50,12 @@ public class UIUser extends javax.swing.JFrame {
         lblUser = new javax.swing.JLabel();
         btnReturn = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
+        lblTitle = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
+
+        pnlPermission.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
 
         lblPermission.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         lblPermission.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -215,9 +218,23 @@ public class UIUser extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        pnlUser.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+
         lblUserName.setText("Nombre Usuario");
 
+        txtUserName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtUserNameKeyTyped(evt);
+            }
+        });
+
         lblUserPass.setText("Contraseña");
+
+        txtUserPass.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtUserPassKeyTyped(evt);
+            }
+        });
 
         btnCreateUser.setText("Crear Usuario");
         btnCreateUser.addActionListener(new java.awt.event.ActionListener() {
@@ -266,7 +283,7 @@ public class UIUser extends javax.swing.JFrame {
                 .addComponent(lblUserPass)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtUserPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnCreateUser)
                 .addContainerGap())
         );
@@ -285,6 +302,10 @@ public class UIUser extends javax.swing.JFrame {
             }
         });
 
+        lblTitle.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitle.setText("INGRESO DE NUEVO USUARIO");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -294,22 +315,25 @@ public class UIUser extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(pnlUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(pnlPermission, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btnReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(pnlUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pnlPermission, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(pnlPermission, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnReturn)
                     .addComponent(btnExit))
@@ -332,11 +356,13 @@ public class UIUser extends javax.swing.JFrame {
         String message = this.user.newUser(state, this.currentUser, this.currentPass, this.txtUserName, this.txtUserPass);
         
         try {
-            if(message.isEmpty())
+            if(message.isEmpty()) {
                 JOptionPane.showMessageDialog(  null, 
                                                 "Los Datos han sido ingresados correctamente.", 
                                                 "Datos Correctos", 
                                                 JOptionPane.INFORMATION_MESSAGE);
+                this.user.returnWindow(currentUser, currentPass);
+            }
             else
                 JOptionPane.showMessageDialog(  null, 
                                                 message, 
@@ -365,6 +391,27 @@ public class UIUser extends javax.swing.JFrame {
         this.user.close();
     }//GEN-LAST:event_btnExitActionPerformed
 
+    private void txtUserNameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUserNameKeyTyped
+        if(this.txtUserName.getText().length() >= 20)
+            evt.consume();
+        
+        char c = evt.getKeyChar();
+        
+        if((c < 'a' || c > 'z') && (c < 'A' || c > 'Z'))
+            evt.consume();
+    }//GEN-LAST:event_txtUserNameKeyTyped
+
+    private void txtUserPassKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUserPassKeyTyped
+        if(this.txtUserPass.getText().length() >= 20)
+            evt.consume();
+        
+        char c = evt.getKeyChar();
+        
+        if((c < 'a' || c > 'z') && (c < 'A' || c > 'Z'))
+            evt.consume();
+        
+    }//GEN-LAST:event_txtUserPassKeyTyped
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCreateUser;
     private javax.swing.JButton btnExit;
@@ -380,6 +427,7 @@ public class UIUser extends javax.swing.JFrame {
     private javax.swing.JLabel lblDataBasePermission;
     private javax.swing.JLabel lblPermission;
     private javax.swing.JLabel lblTablePermission;
+    private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblUser;
     private javax.swing.JLabel lblUserName;
     private javax.swing.JLabel lblUserPass;
