@@ -17,12 +17,48 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-public class CControl implements IControl{
-    
+public class CControl implements IControl {
     private final UIControl window;
     
     public CControl(String user, String pass) {
         window = new UIControl(this, user, pass, initialState(user, pass));
+    }
+    
+    public final ArrayList <String> initialState(String user, String pass){
+        ArrayList <String> dataBases = new ArrayList <> ();
+        MySQLConnection mysql = new MySQLConnection("mysql", user, pass);
+        mysql.conect();
+        try {
+            ResultSet result = mysql.receive("SHOW DATABASES");
+            
+            while(result.next())
+                dataBases.add(result.getString("Database"));
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(CControl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return dataBases;
+    }
+    
+    @Override
+    public ArrayList <String> initialState(String user, String pass, JComboBox comboBox){
+        ArrayList <String> dataBases = new ArrayList <> ();
+        MySQLConnection mysql = new MySQLConnection("mysql", user, pass);
+        mysql.conect();
+        comboBox.removeAllItems();
+        try {
+            ResultSet result = mysql.receive("SHOW DATABASES");
+            
+            while(result.next()){
+                comboBox.addItem(result.getString("Database"));
+                dataBases.add(result.getString("Database"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CControl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return dataBases;
     }
     
     @Override
@@ -62,12 +98,46 @@ public class CControl implements IControl{
     }
     
     @Override
+    public String removeDataBase(String user, String pass, String name){
+        MySQLConnection mysql = new MySQLConnection("mysql", user, pass);
+         mysql.conect();
+         String message = "";
+
+         try {
+             mysql.send("DROP DATABASE " + name);
+             mysql.desconect();
+         } catch (SQLException ex) {
+             message = ex.getMessage();
+         }
+         
+         return message;
+    }
+    
+    @Override
+    public void showTables(String user, String pass, String bdName, JList list){
+        ArrayList <String> dataBases = new ArrayList <> ();
+        MySQLConnection mysql = new MySQLConnection("mysql", user, pass);
+        mysql.conect();
+        DefaultListModel model = new DefaultListModel();        try {
+            ResultSet result = mysql.receive("SHOW FULL TABLES FROM " + bdName);
+            
+            while(result.next()){
+                model.addElement(result.getString("Tables_in_" + bdName));
+                dataBases.add(result.getString("Tables_in_" + bdName));
+            }
+            list.setModel(model);
+        } catch (SQLException ex) {
+            Logger.getLogger(CControl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Override
     public void addRow(JTable table){
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.addRow(new Object[]{false, "", "", "0"});        
         table.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(new JComboBox(new String[]{"INTEGER", "DOUBLE", "CHAR", "BOOL", "FLOAT", "DATE"})));
     }
-    
+       
     @Override
     public String addTable(String user, String pass, String database, JTable table, JTextField name){
         String resultado = "";
@@ -148,6 +218,23 @@ public class CControl implements IControl{
     }
     
     @Override
+    public String dropTable(String user, String pass, String bdName, String table){
+        MySQLConnection mysql = new MySQLConnection("mysql", user, pass);
+        mysql.conect();
+        String message = "";
+
+        try {
+            mysql.send("USE " + bdName);
+            mysql.send("DROP TABLE " + table);
+            mysql.desconect();
+        } catch (SQLException ex) {
+            message = ex.getMessage();
+        }
+         
+        return message;
+    }
+    
+    @Override
     public String addUser(char []state, String user, String pass, JTextField newUser, JTextField newPass){
         if(!newUser.getText().isEmpty() && !newPass.getText().isEmpty()){
             MySQLConnection mysql = new MySQLConnection("mysql", user, pass);
@@ -183,103 +270,9 @@ public class CControl implements IControl{
         return "Campos Incompletos. Debe rellenar tanto Id de Usuario como Contraseña";
     }
     
-    public final ArrayList <String> initialState(String user, String pass){
-        ArrayList <String> dataBases = new ArrayList <> ();
-        MySQLConnection mysql = new MySQLConnection("mysql", user, pass);
-        mysql.conect();
-        try {
-            ResultSet result = mysql.receive("SHOW DATABASES");
-            
-            while(result.next())
-                dataBases.add(result.getString("Database"));
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(CControl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return dataBases;
-    }
-    
-    @Override
-    public ArrayList <String> initialState(String user, String pass, JComboBox comboBox){
-        ArrayList <String> dataBases = new ArrayList <> ();
-        MySQLConnection mysql = new MySQLConnection("mysql", user, pass);
-        mysql.conect();
-        comboBox.removeAllItems();
-        try {
-            ResultSet result = mysql.receive("SHOW DATABASES");
-            
-            while(result.next()){
-                comboBox.addItem(result.getString("Database"));
-                dataBases.add(result.getString("Database"));
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(CControl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return dataBases;
-    }
-    
-    @Override
-    public String removeDataBase(String user, String pass, String name){
-        MySQLConnection mysql = new MySQLConnection("mysql", user, pass);
-         mysql.conect();
-         String message = "";
-
-         try {
-             mysql.send("DROP DATABASE " + name);
-             mysql.desconect();
-         } catch (SQLException ex) {
-             message = ex.getMessage();
-         }
-         
-         return message;
-    }
-    
-    @Override
-    public String dropTable(String user, String pass, String bdName, String table){
-        MySQLConnection mysql = new MySQLConnection("mysql", user, pass);
-        mysql.conect();
-        String message = "";
-
-        try {
-            mysql.send("USE " + bdName);
-            mysql.send("DROP TABLE " + table);
-            mysql.desconect();
-        } catch (SQLException ex) {
-            message = ex.getMessage();
-        }
-         
-        return message;
-    }
-        
     @Override
     public void close(){
         window.dispose();
         CLogIn login = new CLogIn();
-    }
-    
-    @Override
-    public void addUser(String user, String pass){
-        window.dispose();
-        CUser userWindow = new CUser(user, pass);
-    }
-    
-    @Override
-    public void showTables(String user, String pass, String bdName, JList list){
-        ArrayList <String> dataBases = new ArrayList <> ();
-        MySQLConnection mysql = new MySQLConnection("mysql", user, pass);
-        mysql.conect();
-        DefaultListModel model = new DefaultListModel();        try {
-            ResultSet result = mysql.receive("SHOW FULL TABLES FROM " + bdName);
-            
-            while(result.next()){
-                model.addElement(result.getString("Tables_in_" + bdName));
-                dataBases.add(result.getString("Tables_in_" + bdName));
-            }
-            list.setModel(model);
-        } catch (SQLException ex) {
-            Logger.getLogger(CControl.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 }
