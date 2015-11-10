@@ -34,7 +34,7 @@ public class CTable implements ITable{
             if(!String.valueOf(table.getValueAt(i, 1)).isEmpty())
                 cadena += table.getValueAt(i, 1) + " ";
             else {
-                resultado = "Error";
+                resultado = "Datos Incompletos. Debe rellenar todos los campos";
                 break;
             }
             
@@ -44,7 +44,7 @@ public class CTable implements ITable{
                     if(!String.valueOf(table.getValueAt(i, 3)).isEmpty())
                         cadena += table.getValueAt(i, 3) + ") NOT NULL,\n\t";
                     else
-                        resultado = "Error";
+                        resultado = "Datos Incompletos. Debe rellenar todos los campos";
                                         
                     break;
                 
@@ -58,11 +58,11 @@ public class CTable implements ITable{
                     if(!String.valueOf(table.getValueAt(i, 3)).isEmpty())
                         cadena += table.getValueAt(i, 3) + ") NOT NULL,\n\t";
                     else
-                        resultado = "Error";
+                        resultado = "Datos Incompletos. Debe rellenar todos los campos";
                     
                     break;
                 
-                default: resultado = "Error";
+                default: resultado = "Datos Incompletos. Debe rellenar todos los campos";
                     break;
             }
             
@@ -75,6 +75,7 @@ public class CTable implements ITable{
             cadena = cadena.substring(0, cadena.length()-3) + "\n)";
             MySQLConnection mysql = new MySQLConnection("mysql", user, pass);
             mysql.conect();
+            
             try {
                 mysql.send("USE " + database);
                 mysql.send(cadena);
@@ -82,8 +83,6 @@ public class CTable implements ITable{
             } catch (SQLException ex) {
                 resultado = ex.getMessage();
             }
-            
-            System.out.println(cadena);
         }
         
         return resultado;

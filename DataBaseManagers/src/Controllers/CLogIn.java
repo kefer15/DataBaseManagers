@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import javax.swing.JComboBox;
 
 public class CLogIn implements ILogIn{
-    private UILogIn window;
+    private final UILogIn window;
     
     public CLogIn() {
         window = new UILogIn(this);

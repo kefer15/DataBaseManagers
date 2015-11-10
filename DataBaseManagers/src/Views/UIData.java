@@ -4,7 +4,7 @@
  */
 
 /*
- * Consultar.java
+ * UIData.java
  *
  * Created on 10-sep-2015, 9:47:42
  */
@@ -15,10 +15,10 @@ package Views;
  *
  * @author alumno
  */
-public class Consultar extends javax.swing.JFrame {
+public class UIData extends javax.swing.JFrame {
 
     /** Creates new form Consultar */
-    public Consultar() {
+    public UIData() {
         initComponents();
     }
 
@@ -72,8 +72,8 @@ public class Consultar extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE))
+                    .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -171,7 +171,7 @@ public class Consultar extends javax.swing.JFrame {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Consultar().setVisible(true);
+                new UIData().setVisible(true);
             }
         });
     }

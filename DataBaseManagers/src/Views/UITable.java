@@ -180,20 +180,22 @@ public class UITable extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        if(!this.txtNombre.getText().isEmpty())
-            if(this.table.addTable(this.currentUser, this.currentPass, this.dataBaseName, this.tblPrincipal, this.txtNombre).isEmpty()){
+        
+        if(!this.txtNombre.getText().isEmpty()) {
+            String message = this.table.addTable(this.currentUser, this.currentPass, this.dataBaseName, this.tblPrincipal, this.txtNombre);
+            if(message.isEmpty()){
                 JOptionPane.showMessageDialog(  null,
-                                            "La Tabla " + this.txtNombre.getText() + " se creó exitosamente",
-                                            "Tabla creada",
-                                            JOptionPane.INFORMATION_MESSAGE);
+                                                "La Tabla " + this.txtNombre.getText() + " se creó exitosamente",
+                                                "Tabla creada",
+                                                JOptionPane.INFORMATION_MESSAGE);
                 this.table.returnWindow(currentUser, currentPass);
             }
             else
                 JOptionPane.showMessageDialog(  null,
-                                            "Verifique los datos de las tablas",
-                                            "Datos Incompletos",
-                                            JOptionPane.ERROR_MESSAGE);
-        else
+                                                message,
+                                                "Error",
+                                                JOptionPane.ERROR_MESSAGE);
+        } else
             JOptionPane.showMessageDialog(  null,
                                             "Coloque un nombre a la Tabla",
                                             "Dato no Seleccionado",

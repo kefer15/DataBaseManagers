@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import javax.swing.JTextField;
 
 public class CUser implements IUser{
-    private UIUser window;
+    private final UIUser window;
     
     public CUser(String user, String pass) {
         window = new UIUser(this, user, pass);
@@ -17,7 +17,7 @@ public class CUser implements IUser{
         if(!newUser.getText().isEmpty() && !newPass.getText().isEmpty()){
             MySQLConnection mysql = new MySQLConnection("mysql", user, pass);
             mysql.conect();
-            String err = "";
+            String error = "";
 
             try {
                 mysql.send("INSERT INTO user SET"
@@ -39,13 +39,13 @@ public class CUser implements IUser{
 
                 mysql.desconect();
             } catch (SQLException ex) {
-                err = ex.getMessage();
+                error = ex.getMessage();
             }
 
-            return err;
+            return error;
         }
         
-        return null;
+        return "Campos Incompletos. Debe rellenar tanto Id de Usuario como Contraseña";
     }
     
     @Override
